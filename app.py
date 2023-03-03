@@ -9,14 +9,12 @@ import json
 
 # setting page layout
 st.set_page_config(layout="wide")
-user_menu = st.sidebar.radio(
-    'Select an Option',
-    ('NET VS GROSS GDP', 'INDUSTRY WISE COMPARISON', 'POPULATION COMPARISON')
-)
+user_menu = st.sidebar.radio('Select an Option',('NET VS GROSS GDP', 'INDUSTRY WISE COMPARISON', 'POPULATION COMPARISON'))
 # importing data
 df = pd.read_csv('DATA.csv')
 pop_df = pd.read_csv('population.csv')
 india_state = json.load(open('states_india.geojson','r'))
+#importing processed data from preprocessor
 df = preprocessor.preprocess(df)
 pop_df = preprocessor.preprocess1(pop_df)
 df_2021 = preprocessor.preprocess2(df,pop_df)
@@ -53,9 +51,7 @@ if user_menu == 'NET VS GROSS GDP':
     st.caption('GSDP and NSDP are in Crores and Per Capita Income is in ₹')
     fig = px.line(state_vs_state, x='year', y=selected_type_1, color='state', markers=True)
     if state_df1 is not None:
-        fig.update_layout(title=f'Comparison between {selected_state} and {other_state}', title_font =dict(size=24),
-                        width=1000, height=400, xaxis_title='Year',
-                        yaxis_title=f'{selected_type_1}')
+        fig.update_layout(title=f'Comparison between {selected_state} and {other_state}', title_font =dict(size=24),width=1000, height=400, xaxis_title='Year',yaxis_title=f'{selected_type_1}')
     else:
         fig.update_layout(title=f'{selected_type_1} of {selected_state}',
                         width=1000, height=400, xaxis_title='Year',title_font =dict(size=24),
@@ -78,10 +74,8 @@ if user_menu == 'NET VS GROSS GDP':
     #Get data for selected type
     type_df = df_2020[['state', selected_type_1]]
     type_df = type_df.set_index('state')
-
     # Sort data by selected type column
     sorted_df = type_df.sort_values(selected_type_1, ascending=False)
-
     # Get rank of other state
     other_state_rank = sorted_df.index.get_loc(selected_state) + 1
 
@@ -92,22 +86,20 @@ if user_menu == 'NET VS GROSS GDP':
     st.write('3. As on 2020 :green[Goa, Delhi and Sikkim] had highest Per Capita Income and :red[Manipur, Uttar Pradesh and Bihar] were at the bottom of the list ranking at 31, 32 and 33 respectively.')
     st.write('---')
 
+
     st.header('About Data used')
     st.markdown("○ :orange[Net Domestic Product in percent] is state's individual  contribution in  India's GDP in percent.")
     st.write('○ :orange[Net Depreciation rate] is the ratio between GSDP/NSDP which indicates the extent of capital goods replaced in economy.')
     st.write('---')
-
     #bar chart
     selected_type_2 = st.selectbox('SELECT TYPE', type2)
     top = helper.get_top_states(selected_state,selected_type_1,selected_type_2,df_2020)
     x = top['state']
     y1 = top[selected_type_1]
     y2 = top[selected_type_2]
-
     if selected_type_1 == selected_type_2:
             fig = go.Figure(data=[go.Bar(name=selected_type_1, x=x, y=y1, width=0.2, offset=-0.1, marker=dict(color=['#636EFA' if state != selected_state else '#60d394' for state in x]))])
-            fig.update_layout(title=f'{selected_type_1} for Top 10 States',width=1000, height=500,
-                            yaxis=dict(title=f'{selected_type_1}', rangemode='tozero'), yaxis_showgrid=False,)
+            fig.update_layout(title=f'{selected_type_1} for Top 10 States',width=1000, height=500,yaxis=dict(title=f'{selected_type_1}', rangemode='tozero'), yaxis_showgrid=False,)
             st.plotly_chart(fig)           
     else:
         fig = go.Figure(data=[go.Bar(name=selected_type_1, x=x, y=y1, width=0.2, offset=-0.1, hovertext=y1, marker=dict(color=['#636EFA' if state != selected_state else '#60d394' for state in x]))])
@@ -116,21 +108,18 @@ if user_menu == 'NET VS GROSS GDP':
                             yaxis=dict(title=f'{selected_type_1}', rangemode='tozero'), yaxis_showgrid=False,
                             yaxis2=dict(title=f'{selected_type_2}', overlaying='y'   , side='right', rangemode='tozero'),legend=dict(y=1.1, orientation='h'))
         st.plotly_chart(fig)
-    st.write('Some insights that can be derived from the chart are:')
-    st.write('1. Among all the states, Goa has the highest Per Capita Income. This means that Goa has a larger share of the total NSDP of all states, despite having a smaller population.')
-    st.write('2. Delhi has the 2nd highest Per Capita Income among the top 5 states, followed by Sikkim Chandigarh and Haryana. This indicates that these states have a higher economic output per person relative to the other states.')
-    st.write('3. Mizoram and Arunachal Pradesh have the lowest per capita NSDP among the top 5 states, despite having a higher NSDP percentage than some other states. This could be due to their smaller population and/or lower overall NSDP.')
-    st.write('4. There is a significant difference in per capita NSDP between the top 5 states and the rest of the states. The top 5 states have a per capita NSDP ranging from Rs. 3.2 lakhs to Rs. 5.6 lakhs, while the rest of the states have a per capita NSDP of less than Rs. 2.2 lakhs. This indicates that the top 5 states have a more developed economy compared to the rest of the states.')
-    st.write('5. Net Depreciation Rate of major states is around 10%. The rate Jammu & Kashmir and Sikkim is 20% and 14% respectively. ')
+        st.write('Some insights that can be derived from the chart are:')
+        st.write('1. Among all the states, Goa has the highest Per Capita Income. This means that Goa has a larger share of the total NSDP of all states, despite having a smaller population.')
+        st.write('2. Delhi has the 2nd highest Per Capita Income among the top 5 states, followed by Sikkim Chandigarh and Haryana. This indicates that these states have a higher economic output per person relative to the other states.')
+        st.write('3. Mizoram and Arunachal Pradesh have the lowest per capita NSDP among the top 5 states, despite having a higher NSDP percentage than some other states. This could be due to their smaller population and/or lower overall NSDP.')
+        st.write('4. There is a significant difference in per capita NSDP between the top 5 states and the rest of the states. The top 5 states have a per capita NSDP ranging from Rs. 3.2 lakhs to Rs. 5.6 lakhs, while the rest of the states have a per capita NSDP of less than Rs. 2.2 lakhs. This indicates that the top 5 states have a more developed economy compared to the rest of the states.')
+        st.write('5. Net Depreciation Rate of major states is around 10%. The rate Jammu & Kashmir and Sikkim is 20% and 14% respectively. ')
     st.write('---')
 
-
-     
     #scatter plot
     selected_type_3 = st.selectbox('SELECT TYPE',type3 )
     zones_df = helper.assign_zones(df_2021)
     fig.update_layout(width=1000, height=500)
-
     if selected_type_3 == 'density':
         if selected_type_1 == 'Per Capita Income':
             fig = px.scatter(zones_df, x=selected_type_1, y =selected_type_3 ,size =selected_type_3, color='ZONE',size_max=70, hover_name='state')
@@ -183,7 +172,6 @@ if user_menu == 'NET VS GROSS GDP':
             st.write("3. Haryana and Gujarat are only two major states with capex lower than 5 %.")
     st.write('---')
 
-
     #choropleth map
     st.title('Overview with the Map')
     india_df = preprocessor.preprocess3(india_state, df_2021)
@@ -196,13 +184,10 @@ if user_menu == 'NET VS GROSS GDP':
     st.write('2. Southern and western states have higher average per capita income while comparing with other zones.')
 
 
-
-
-
 if user_menu == 'INDUSTRY WISE COMPARISON':
     type = helper.industry_type()
     year = helper.year(df)
-    selected_columns = st.sidebar.multiselect("Select to check",type)
+    selected_columns = st.sidebar.multiselect("Select to check",type, default=['Value Added by Agriculture'])
     industry = helper.get_state(df,selected_state)
     value_added = helper.assign_zones(df_2021)
     # LINE CHART
@@ -214,35 +199,31 @@ if user_menu == 'INDUSTRY WISE COMPARISON':
         fig.update_yaxes(title_text='Value added (in Crore)')
         st.plotly_chart(fig)
 
+ 
     if selected_columns:
         value_added['total'] = value_added.sum(axis=1)
         value_added = value_added[value_added.total !=0]
         value_added.sort_values(by='total',ascending=False,inplace=True)
         valueadder = selected_columns
-        fig = px.bar(value_added,x='ZONE',y=valueadder)
-        fig.update_layout(width=1000, height=500)
+        fig = px.bar(value_added,x='ZONE',y=valueadder,hover_data=['state'])
+        fig.update_layout(width=1000, height=500,hoverlabel=dict(namelength = -1))
         fig.update_xaxes(title_text='Zone')
         fig.update_yaxes(title_text='Value added (in Crore)')
         st.plotly_chart(fig)
 
-    # PIE chart
-    if selected_columns:
-        value_added['total'] = value_added.sum(axis=1)
-        value_added = value_added[value_added.total !=0]
-        value_added.sort_values(by='total',ascending=False,inplace=True)
-        # chart_data = industry[industry['year'] == max(industry['year'])]
-        # chart_data = chart_data[selected_columns].sum().reset_index()
-        # chart_data.columns = ['Columns', 'Value']
-        labels = [value_added ]
-        fig = go.Figure(go.sunburst(labels=value_added['ZONE','state','Value Added by Agriculture','Value Added by Manufacturing','Value Added by Construction','Value Added by Industry','Value Added by Bank', 'Value Added by Service']
-                                    ,parents=value_added['','ZONE','state','state','state','state','state','state',]
-                                    
-                                    
-                                    ))
+    # # PIE chart
+    # if selected_columns:
+    #     value_added['total'] = value_added.sum(axis=1)
+    #     value_added = value_added[value_added.total !=0]
+    #     value_added.sort_values(by='total',ascending=False,inplace=True)
+    #     labels = [value_added ]
+    #     fig = go.Figure(go.sunburst(labels=value_added['ZONE','state','Value Added by Agriculture','Value Added by Manufacturing','Value Added by Construction','Value Added by Industry','Value Added by Bank', 'Value Added by Service']
+    #                                 ,parents=value_added['','ZONE','state','state','state','state','state','state',]
+    #                                 ))
         
-        fig = px.pie(chart_data, values='Value', names='Columns', title='Pie Chart for the Latest Year')
-        st.plotly_chart(fig)
-    st.write('')
+    #     fig = px.pie(chart_data, values='Value', names='Columns', title='Pie Chart for the Latest Year')
+    #     st.plotly_chart(fig)
+    # st.write('')
 
    
 
@@ -251,33 +232,33 @@ if user_menu == 'INDUSTRY WISE COMPARISON':
 
 
 
-if user_menu == 'POPULATION COMPARISON':
-    state = helper.pop_state(pop_df)
-    year = helper.pop_year(pop_df)
-    # type = helper.pop_type()
-    selected_state = st.sidebar.selectbox('Select State', state)
-    selected_columns = st.selectbox("Select to check",type)
-    population = helper.get_pop(pop_df,selected_state)
+# if user_menu == 'POPULATION COMPARISON':
+#     state = helper.pop_state(pop_df)
+#     year = helper.pop_year(pop_df)
+#     # type = helper.pop_type()
+#     selected_state = st.sidebar.selectbox('Select State', state)
+#     selected_columns = st.selectbox("Select to check",type)
+#     population = helper.get_pop(pop_df,selected_state)
     
-    # if selected_state:
-    #     fig = px.line(population, x='year', y=selected_columns, color_discrete_sequence=['brown'])
-    #     st.plotly_chart(fig)
+#     # if selected_state:
+#     #     fig = px.line(population, x='year', y=selected_columns, color_discrete_sequence=['brown'])
+#     #     st.plotly_chart(fig)
 
-    fig = px.line(population, x='year', y=selected_columns, 
-              title='Population trend over years', 
-              labels={'year': 'Year', 'selected_columns': 'Population'}, 
-              color_discrete_sequence=['red'])
+#     fig = px.line(population, x='year', y=selected_columns, 
+#               title='Population trend over years', 
+#               labels={'year': 'Year', 'selected_columns': 'Population'}, 
+#               color_discrete_sequence=['red'])
 
-    fig.update_layout(annotations=[dict(x=year, y=value, text=f'increased by', 
-    showarrow=True , arrowhead=1, ax=-50, ay=-50) 
-    for year, value in zip(population.year, population[selected_columns])])
-    st.plotly_chart(fig)
+#     fig.update_layout(annotations=[dict(x=year, y=value, text=f'increased by', 
+#     showarrow=True , arrowhead=1, ax=-50, ay=-50) 
+#     for year, value in zip(population.year, population[selected_columns])])
+#     st.plotly_chart(fig)
 
 
-    # fig = px.scatter_mapbox(population, lat='latitude', lon='longitude', 
-    #                     color=selected_columns, size=selected_columns,
-    #                     color_continuous_scale='Viridis', size_max=15, 
-    #                     title='Population trend over years')
+#     # fig = px.scatter_mapbox(population, lat='latitude', lon='longitude', 
+#     #                     color=selected_columns, size=selected_columns,
+#     #                     color_continuous_scale='Viridis', size_max=15, 
+#     #                     title='Population trend over years')
     
 
 
