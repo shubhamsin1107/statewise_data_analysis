@@ -141,7 +141,7 @@ if user_menu == 'NET VS GROSS GDP':
             st.write('3. Per capita income for most states ranges from 27k Rs to 160k Rs. where Easter and North eastern states are in lower range and Souther states being in middle range.  ')
         else:
             fig = px.scatter(zones_df, x=selected_type_1, y =selected_type_3 ,size =selected_type_1, color='ZONE',size_max=70, hover_name='state')
-            fig.update_xaxes(tickformat=',.0f', tickprefix='₹', ticksuffix=' Cr')
+            fig.update_xaxes( tickmode='array',tickvals= [0,500000,1000000,1500000,2000000,2500000],ticktext=['0','5 Lakh cr', '10 Lakh cr', '15 Lakh cr', '20 Lakh cr', '25 Lakh cr'])
             st.plotly_chart(fig,use_container_width=True)
             st.write('1. Most state with high Gdp output has under 600 Density, Uttar Pradesh being expecption has 829  density and maharastra being at the top of Gdp output.')
             st.write('2. Middle Gdp output states ranges from 200 to 1000 density and 4 lakh crore to 8 lakh crore in Gdp output.')
@@ -149,7 +149,7 @@ if user_menu == 'NET VS GROSS GDP':
     elif selected_type_3 == 'Total Population':
         if selected_type_1 == 'Per Capita Income':
             fig = px.scatter(zones_df, x=selected_type_3, y =selected_type_1 ,size =selected_type_3, color='ZONE',size_max=70, hover_name='state')
-            fig.update_xaxes( tickmode='array',tickvals= [0,50000,100000,150000,200000,250000],ticktext=['0','5cr', '10cr', '15cr', '20cr', '25Cr'])
+            fig.update_xaxes( tickmode='array',tickvals= [0,50000,100000,150000,200000,250000],ticktext=['0','5 crore', '10 crore', '15 crore', '20 crore', '25 crore'] )
             st.plotly_chart(fig,use_container_width=True)
             st.write('1. All North east states except Assam has population under 60 Lakh and Per capita income under 1 lakh except Sikkim which is 2.4 lakh.')
             st.write("2. Northern State's population ranges from 1 Cr. to 7 Cr. depending on the economic development of state. Delhi being highest in per capita income with 2.4 Lakh and Jammu & Kashmir at lowest with Rs 65k" )
@@ -158,8 +158,8 @@ if user_menu == 'NET VS GROSS GDP':
             st.write("5. Uttar pradesh being at lower capita with high population and Goa at higher per capita with low population in thier respective zones.")
         else:
             fig = px.scatter(zones_df, x=selected_type_3, y =selected_type_1 ,size =selected_type_1, color='ZONE',size_max=60, hover_name='state')
-            fig.update_yaxes(tickformat=',.0f', tickprefix='₹', ticksuffix=' Cr')
-            fig.update_xaxes( tickmode='array',tickvals= [0,50000,100000,150000,200000,250000],ticktext=['0','5cr', '10cr', '15cr', '20cr', '25Cr'])
+            fig.update_yaxes( tickmode='array',tickvals= [0,500000,1000000,1500000,2000000,2500000],ticktext=['0','5 Lakh cr', '10 Lakh cr', '15 Lakh cr', '20 Lakh cr', '25 Lakh cr'])
+            fig.update_xaxes( tickmode='array',tickvals= [0,50000,100000,150000,200000,250000],ticktext=['0','5 crore', '10 crore', '15 crore', '20 crore', '25 crore'])
             st.plotly_chart(fig,use_container_width=True) 
             st.write('1. Most states with population over 5Cr. has economic output of 50 billion Dollar and more with Maharastra at top. Bihar being exception with 12 Cr. and economic output lower then 50 Billion Dollar') 
             st.write("2. Assam at top with highest economic output in northern zone with 20 billion dollars approximately.")
@@ -170,81 +170,81 @@ if user_menu == 'NET VS GROSS GDP':
             fig.update_yaxes( tickmode='array',tickvals= [0,50000,100000,150000,200000,250000],ticktext=['0','50000cr', '1 Lakh cr', '1.5 Lakh cr', '2 Lakh cr', '2.5 Lakh cr'])
             fig.update_xaxes(tickformat=',.0f')
             st.plotly_chart(fig,use_container_width=True)
-            # st.write    
-
-
+            st.write("1. Capital expenditure spend on most north east is less than 10k Crore. ")
+            st.write("2. Most states capex is under 75K Crore for major states.")
+            st.write("3. Uttar Pradesh and Maharashtra are the only state whose capex is more the 1 Lakh Crore. One largest state economy and one largest state in terms of population.")
+        else:
+            fig = px.scatter(zones_df, x=selected_type_1, y =selected_type_3 ,size =selected_type_3, color='ZONE',size_max=60, hover_name='state')
+            fig.update_yaxes( tickmode='array',tickvals= [0,50000,100000,150000,200000,250000],ticktext=['0','50000cr', '1 Lakh cr', '1.5 Lakh cr', '2 Lakh cr', '2.5 Lakh cr'])
+            fig.update_xaxes( tickmode='array',tickvals= [0,500000,1000000,1500000,2000000,2500000],ticktext=['0','5 Lakh cr', '10 Lakh cr', '15 Lakh cr', '20 Lakh cr', '25 Lakh cr'])
+            st.plotly_chart(fig,use_container_width=True)
+            st.write("1. There are 5 states whose GDP is more than 10 Lakh Cr. and capex is ranging from 50K Cr to 1.5 Lakh Cr.")
+            st.write("2. Capex to Gdp ratio for most states is around 5% to 15%. Arunachal Pradesh,  J&k and Manipur being exception with 36%, 35% and  28% respectively. ")
+            st.write("3. Haryana and Gujarat are only two major states with capex lower than 5 %.")
     st.write('---')
 
 
-
-
-
-
-
-
-
-
     #choropleth map
+    st.title('Overview with the Map')
     india_df = preprocessor.preprocess3(india_state, df_2021)
-    fig = px.choropleth_mapbox(india_df, geojson=india_state, locations='state_code',
-                            featureidkey='properties.state_code',
-                            color=selected_type_1,color_continuous_scale=px.colors.sequential.Plasma,
-                            mapbox_style="carto-positron",
-                            center={"lat": 21.7679, "lon": 78.9629},
-                            zoom=3, hover_name='state',
-                            opacity=0.5
-                            )
+    custom_color_scale = [[0.0, "#ffddcc"],[0.2, "#ffbb99"],[0.4, "#ff9966"],[0.6, "#ff6619"],[0.8, "#ff7530"],[1.0, "#ff5500"],]
+    fig = px.choropleth_mapbox(india_df, geojson=india_state, locations='state_code',featureidkey='properties.state_code',color=selected_type_1,color_continuous_scale=custom_color_scale,
+                            mapbox_style="carto-positron",center={"lat": 21.7679, "lon": 78.9629},zoom=3, hover_name='state',opacity=0.5)
     fig.update_layout(width=1000, height=700)
     st.plotly_chart(fig)
-
-if user_menu == 'INDUSTRY WISE COMPARISON':
-    pass
-
-
-
-
-
-
-
+    st.write('1. Clearly map shows that states with coast lines are higher in Gdp output list. Mainly because of more business stablised because of ports and transportations. ')
+    st.write('2. Southern and western states have higher average per capita income while comparing with other zones.')
 
 
 
 
 
 if user_menu == 'INDUSTRY WISE COMPARISON':
-    state = helper.state_list(df)
     type = helper.industry_type()
     year = helper.year(df)
-    selected_state = st.sidebar.selectbox('SELECT STATE', state)
-    selected_columns = st.multiselect("Select to check",type)
+    selected_columns = st.sidebar.multiselect("Select to check",type)
     industry = helper.get_state(df,selected_state)
-
+    value_added = helper.assign_zones(df_2021)
     # LINE CHART
     if selected_columns:                                     
-        chart_data = industry[['YEAR'] + selected_columns]
-        fig = px.line(chart_data, x='YEAR', y=selected_columns)
+        chart_data = industry[['year'] + selected_columns]
+        fig = px.line(chart_data, x='year', y=selected_columns)
+        fig.update_layout(width=1000, height=500)
+        fig.update_xaxes(title_text='Year')
+        fig.update_yaxes(title_text='Value added (in Crore)')
+        st.plotly_chart(fig)
+
+    if selected_columns:
+        value_added['total'] = value_added.sum(axis=1)
+        value_added = value_added[value_added.total !=0]
+        value_added.sort_values(by='total',ascending=False,inplace=True)
+        valueadder = selected_columns
+        fig = px.bar(value_added,x='ZONE',y=valueadder)
+        fig.update_layout(width=1000, height=500)
+        fig.update_xaxes(title_text='Zone')
+        fig.update_yaxes(title_text='Value added (in Crore)')
         st.plotly_chart(fig)
 
     # PIE chart
     if selected_columns:
-        chart_data = industry[industry['YEAR'] == max(industry['YEAR'])]
-        chart_data = chart_data[selected_columns].sum().reset_index()
-        chart_data.columns = ['Columns', 'Value']
+        value_added['total'] = value_added.sum(axis=1)
+        value_added = value_added[value_added.total !=0]
+        value_added.sort_values(by='total',ascending=False,inplace=True)
+        # chart_data = industry[industry['year'] == max(industry['year'])]
+        # chart_data = chart_data[selected_columns].sum().reset_index()
+        # chart_data.columns = ['Columns', 'Value']
+        labels = [value_added ]
+        fig = go.Figure(go.sunburst(labels=value_added['ZONE','state','Value Added by Agriculture','Value Added by Manufacturing','Value Added by Construction','Value Added by Industry','Value Added by Bank', 'Value Added by Service']
+                                    ,parents=value_added['','ZONE','state','state','state','state','state','state',]
+                                    
+                                    
+                                    ))
+        
         fig = px.pie(chart_data, values='Value', names='Columns', title='Pie Chart for the Latest Year')
         st.plotly_chart(fig)
+    st.write('')
 
-    #BAR CHART
-    chart_data = industry[['YEAR'] + selected_columns]
-    growth_rates = chart_data[selected_columns].pct_change().mean() * 100
-    growth_rates = growth_rates.reset_index()
-    growth_rates.columns = ['Columns', 'Growth Rate']
-    growth_rates['Growth Rate'] = growth_rates['Growth Rate'].astype(int)
-    fig = px.bar(growth_rates, x='Columns', y='Growth Rate', title='Average Growth Rate Over the Years',color='Growth Rate', color_continuous_scale=px.colors.sequential.Plasma)
-    st.plotly_chart(fig)
-
-
-
-
+   
 
 
 
@@ -254,7 +254,7 @@ if user_menu == 'INDUSTRY WISE COMPARISON':
 if user_menu == 'POPULATION COMPARISON':
     state = helper.pop_state(pop_df)
     year = helper.pop_year(pop_df)
-    type = helper.pop_type()
+    # type = helper.pop_type()
     selected_state = st.sidebar.selectbox('Select State', state)
     selected_columns = st.selectbox("Select to check",type)
     population = helper.get_pop(pop_df,selected_state)

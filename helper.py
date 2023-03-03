@@ -3,7 +3,6 @@ def state_list(df):
     state_list = df['state'].unique().tolist()
     state_list.sort()
     return state_list
-
 def type_1():
     type = ['Gross State Domestic Product','Net State Domestic Product','Per Capita Income']
     return type
@@ -13,15 +12,6 @@ def type_2():
 def type_3():
     type = ['density', 'Total Population','Capital Expenditure']
     return type
-
-
-def get_dataframe(df, state, column_names):
-    state_df = df[df['state'] == state]
-    state_df = state_df[state_df.value != 0]
-    # Return a new dataframe with only the "YEAR" and specified columns
-    return state_df[['year'] + list(column_names)]
-
-
 def get_state_data(df, state1, state2):
     data1 = df[df['state'] == state1].reset_index(drop=True)
     data1 = data1[data1.value !=0]
@@ -30,14 +20,10 @@ def get_state_data(df, state1, state2):
     combined_data = pd.concat([data1, data2], keys=[state1, state2]).reset_index()
     combined_data = combined_data.drop(['level_1'], axis=1)
     return combined_data
-
-
 def get_state(df, state):
     state_df = df[df['state'] == state]
     state_df = state_df[state_df.value!= 0]
     return state_df
-
-
 def get_top_states(state_name, type_1, type_2, df_2020):
     state_data = df_2020[df_2020['state'] == state_name]
     if type_1 != type_2:
@@ -51,10 +37,6 @@ def get_top_states(state_name, type_1, type_2, df_2020):
         top_10 = pd.concat([state_data, top_states])
         top_10 = top_10[['state', type_1]].sort_values(by=type_1, ascending=False)
     return top_10
-
-
-
-
 def assign_zones(df_2021):
     north_zone = ['Chandigarh', 'Delhi', 'Haryana', 'Himachal Pradesh', 'Jammu & Kashmir', 'Punjab', 'Rajasthan','Uttarakhand']
     east_zone = ['Bihar', 'Jharkhand', 'Odisha', 'West Bengal']
@@ -63,10 +45,8 @@ def assign_zones(df_2021):
     central_zone = ['Chhattisgarh', 'Madhya Pradesh', 'Uttar Pradesh']
     north_east_zone = ['Arunachal Pradesh','Assam','Manipur', 'Meghalaya', 'Mizoram', 'Nagaland', 'Sikkim', 'Tripura' ]
     zones = {'North': north_zone, 'East': east_zone, 'West': west_zone, 'South': south_zone, 'Central': central_zone, 'North East': north_east_zone}
-    
     df_with_zones = df_2021.copy()
     df_with_zones['ZONE'] = ''
-    
     for zone, state_list in zones.items():
         for state in state_list:
             df_with_zones.loc[df_with_zones['state'] == state, 'ZONE'] = zone
@@ -80,25 +60,12 @@ def assign_zones(df_2021):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 def industry_type():
-    indu = ['VALUE ADDED AGRI','VALUE ADDED BANK','VALUE ADDED CONC','VALUE ADDED INDUSTRY','VALUE ADDED MANU', 'VALUE ADDED SERVICE']
+    indu = ['Value Added by Agriculture','Value Added by Manufacturing','Value Added by Construction','Value Added by Industry','Value Added by Bank', 'Value Added by Service']
     return indu
 
 def year(df):
-    year  = df['YEAR'].unique().tolist
+    year  = df['year'].unique().tolist
     return year
 
 
