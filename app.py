@@ -99,7 +99,11 @@ if user_menu == 'NET VS GROSS GDP':
     if selected_type_1 == selected_type_2:
             fig = go.Figure(data=[go.Bar(name=selected_type_1, x=x, y=y1, width=0.2, offset=-0.1, marker=dict(color=['#636EFA' if state != selected_state else '#60d394' for state in x]))])
             fig.update_layout(title=f'{selected_type_1} for Top 10 States',width=1000, height=500,yaxis=dict(title=f'{selected_type_1}', rangemode='tozero'), yaxis_showgrid=False,)
-            st.plotly_chart(fig)           
+            st.plotly_chart(fig)  
+            st.header('Some insights that can be derived from the chart are:')
+            st.write('1. Maharastra ranks highest in both GSDP or NSDP absolute value and Percentage value.')
+            st.write('2. Net Depreciation Rate of major states is around 10%. The rate is higher for Jammu & Kashmir and Sikkim is 20% and 14% respectively.')
+            st.write("3. Goa ranks highest in Per capita income. Delhi, Sikkim, Chandigarh are next in line.")         
     else:
         fig = go.Figure(data=[go.Bar(name=selected_type_1, x=x, y=y1, width=0.2, offset=-0.1, hovertext=y1, marker=dict(color=['#636EFA' if state != selected_state else '#60d394' for state in x]))])
         fig.add_trace(go.Bar(name=selected_type_2, x=x, y=y2, yaxis='y2', width=0.2,offset=0.1, hovertext=y2, marker=dict(color=['#ef798a' if state != selected_state else '#f46036' for state in x])))
@@ -107,33 +111,36 @@ if user_menu == 'NET VS GROSS GDP':
                             yaxis=dict(title=f'{selected_type_1}', rangemode='tozero'), yaxis_showgrid=False,
                             yaxis2=dict(title=f'{selected_type_2}', overlaying='y'   , side='right', rangemode='tozero'),legend=dict(y=1.1, orientation='h'))
         st.plotly_chart(fig)
-        st.write('Some insights that can be derived from the chart are:')
-        st.write('1. Among all the states, Goa has the highest Per Capita Income. This means that Goa has a larger share of the total NSDP of all states, despite having a smaller population.')
-        st.write('2. Delhi has the 2nd highest Per Capita Income among the top 5 states, followed by Sikkim Chandigarh and Haryana. This indicates that these states have a higher economic output per person relative to the other states.')
-        st.write('3. Mizoram and Arunachal Pradesh have the lowest per capita NSDP among the top 5 states, despite having a higher NSDP percentage than some other states. This could be due to their smaller population and/or lower overall NSDP.')
-        st.write('4. There is a significant difference in per capita NSDP between the top 5 states and the rest of the states. The top 5 states have a per capita NSDP ranging from Rs. 3.2 lakhs to Rs. 5.6 lakhs, while the rest of the states have a per capita NSDP of less than Rs. 2.2 lakhs. This indicates that the top 5 states have a more developed economy compared to the rest of the states.')
-        st.write('5. Net Depreciation Rate of major states is around 10%. The rate Jammu & Kashmir and Sikkim is 20% and 14% respectively. ')
+        st.header('Some insights that can be derived from the chart are:')
+        st.write('1. Maharastra ranks highest in both GSDP or NSDP absolute value and Percentage value.')
+        st.write('2. Net Depreciation Rate of major states is around 10%. The rate is higher for Jammu & Kashmir and Sikkim is 20% and 14% respectively.')
+        st.write("3. Goa ranks highest in Per capita income. Delhi, Sikkim, Chandigarh are next in line.")
     st.write('---')
 
     #scatter plot
+    st.header('About Data used')
+    st.markdown('○ Density refers to number of people living per square kilometer.')
+    st.write('○ Total population of a state refers to number of people who live in the state.')
+    st.write("○ Capital expenditure refers to funds spend on acquiring, maintaining, or improving long-term assets that are used for public services and infrastructure. These assets are expected to provide benefits to the public over a period of several years and are not meant for immediate consumption.")
     selected_type_3 = st.selectbox('SELECT TYPE',type3 )
     zones_df = helper.assign_zones(df_2021)
-    fig.update_layout(width=1000, height=500)
+    fig.update_layout(width=1000, height=500,title=f"{selected_type_1} and {selected_type_3} scatter plot.")
     if selected_type_3 == 'density':
         if selected_type_1 == 'Per Capita Income':
             fig = px.scatter(zones_df, x=selected_type_1, y =selected_type_3 ,size =selected_type_3, color='ZONE',size_max=70, hover_name='state')
             fig.update_xaxes(tickformat=',.0f', tickprefix='₹')
             st.plotly_chart(fig,use_container_width=True)
+            # fig.update_layout(width=1000, height=500,title=f"{selected_type_1} and {selected_type_3} scatter plot.")
             st.write('1. Delhi and Chandigarh have 11.3k and 9.2k density respectively with high Per capita income.')
             st.write('2. Most of the big states in India have under 1000 People/Km and small states are mostly under 500 People/km. ')
-            st.write('3. Per capita income for most states ranges from 27k Rs to 160k Rs. where Easter and North eastern states are in lower range and Souther states being in middle range.  ')
+            st.write('3. Per capita income for most states ranges from 50k Rs to 160k Rs. where Eastern and North eastern states are in lower range and Southern states being in upper range.  ')
         else:
             fig = px.scatter(zones_df, x=selected_type_1, y =selected_type_3 ,size =selected_type_1, color='ZONE',size_max=70, hover_name='state')
             fig.update_xaxes( tickmode='array',tickvals= [0,500000,1000000,1500000,2000000,2500000],ticktext=['0','5 Lakh cr', '10 Lakh cr', '15 Lakh cr', '20 Lakh cr', '25 Lakh cr'])
             st.plotly_chart(fig,use_container_width=True)
-            st.write('1. Most state with high Gdp output has under 600 Density, Uttar Pradesh being expecption has 829  density and maharastra being at the top of Gdp output.')
+            st.write('1. Most state with high Gdp output has under 600 Density, Uttar Pradesh being exception has 829 density and Maharastra being at the top of Gdp output.')
             st.write('2. Middle Gdp output states ranges from 200 to 1000 density and 4 lakh crore to 8 lakh crore in Gdp output.')
-            st.write('3. Lower Gdp output states mostly have Norther Eastern states and North states mostly because of higher altitude areas and tough terrains')
+            st.write('3. Lower Gdp output states mostly have North Eastern states and North states mostly because of higher altitude areas and tough terrains')
     elif selected_type_3 == 'Total Population':
         if selected_type_1 == 'Per Capita Income':
             fig = px.scatter(zones_df, x=selected_type_3, y =selected_type_1 ,size =selected_type_3, color='ZONE',size_max=70, hover_name='state')
@@ -142,16 +149,16 @@ if user_menu == 'NET VS GROSS GDP':
             st.write('1. All North east states except Assam has population under 60 Lakh and Per capita income under 1 lakh except Sikkim which is 2.4 lakh.')
             st.write("2. Northern State's population ranges from 1 Cr. to 7 Cr. depending on the economic development of state. Delhi being highest in per capita income with 2.4 Lakh and Jammu & Kashmir at lowest with Rs 65k" )
             st.write("3. Eastern states having middle to high population ranging from 4 Cr. to 12 Cr. With average per capita income lowest comparing with other zones.")
-            st.write("4. Per capita income of souther states ranges from 1.1 Lakh to 1.6 Lakh and Population between 8 Cr. to 3.5 Cr.")
+            st.write("4. Per capita income of southern states ranges from 1.1 Lakh to 1.6 Lakh and Population between 8 Cr. to 3.5 Cr.")
             st.write("5. Uttar pradesh being at lower capita with high population and Goa at higher per capita with low population in thier respective zones.")
         else:
             fig = px.scatter(zones_df, x=selected_type_3, y =selected_type_1 ,size =selected_type_1, color='ZONE',size_max=60, hover_name='state')
             fig.update_yaxes( tickmode='array',tickvals= [0,500000,1000000,1500000,2000000,2500000],ticktext=['0','5 Lakh cr', '10 Lakh cr', '15 Lakh cr', '20 Lakh cr', '25 Lakh cr'])
             fig.update_xaxes( tickmode='array',tickvals= [0,50000,100000,150000,200000,250000],ticktext=['0','5 crore', '10 crore', '15 crore', '20 crore', '25 crore'])
             st.plotly_chart(fig,use_container_width=True) 
-            st.write('1. Most states with population over 5Cr. has economic output of 50 billion Dollar and more with Maharastra at top. Bihar being exception with 12 Cr. and economic output lower then 50 Billion Dollar') 
-            st.write("2. Assam at top with highest economic output in northern zone with 20 billion dollars approximately.")
-            st.write("3. Northern states having lower to middle economic output ranging from 1 billion dollar to 60 billion dollar.")
+            st.write('1. Most states with population over 5Cr. has economic output of 5 Lakh Cr and more with Maharastra at top. Bihar being exception with 12 Cr. and economic output lower then 5 Lakh Cr.') 
+            st.write("2. Assam at top with highest economic output in north-eastern zone with 2 Lakh Cr. approximately.")
+            st.write("3. Northern states having lower to middle economic output ranging from 1 Lakh cr to 6 Lakh cr.")
     else:
         if selected_type_1 == 'Per Capita Income':
             fig = px.scatter(zones_df, x=selected_type_1, y =selected_type_3 ,size =selected_type_3, color='ZONE',size_max=60, hover_name='state')
@@ -159,7 +166,7 @@ if user_menu == 'NET VS GROSS GDP':
             fig.update_xaxes(tickformat=',.0f')
             st.plotly_chart(fig,use_container_width=True)
             st.write("1. Capital expenditure spend on most north east is less than 10k Crore. ")
-            st.write("2. Most states capex is under 75K Crore for major states.")
+            st.write("2. For major states capex is ranging from 30k cr to 75k cr.")
             st.write("3. Uttar Pradesh and Maharashtra are the only state whose capex is more the 1 Lakh Crore. One largest state economy and one largest state in terms of population.")
         else:
             fig = px.scatter(zones_df, x=selected_type_1, y =selected_type_3 ,size =selected_type_3, color='ZONE',size_max=60, hover_name='state')
